@@ -1,19 +1,20 @@
 [
   {
-    "name": "Upload to GitHub",
+    "name": "Upload to GitHub shows error when no project",
     "steps": [
       {
+        "send": { "callback": "github:upload" },
         "expect": [
+          {
+            "method": "answerCallbackQuery"
+          },
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Initiate GitHub upload workflow"
+              "text": "No project to upload. Tap 📝 Generate code first."
             }
           }
-        ],
-        "send": {
-          "callback": "github:upload"
-        }
+        ]
       }
     ]
   }

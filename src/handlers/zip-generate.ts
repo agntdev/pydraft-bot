@@ -1,17 +1,39 @@
-import { Composer } from "grammy";
+import { Composer, InputFile } from "grammy";
+import type { Ctx } from "../bot.js";
+import { registerMainMenuItem, inlineButton, inlineKeyboard } from "../toolkit/index.js";
+import { createZip } from "../integrations/zip.js";
 
-// SCAFFOLD — generated from the bot blueprint BEFORE the agent runs.
-// Keep a LIVE registration (.command / .callbackQuery / …) so this feature is
-// never an empty stub. Replace the reply body with real logic + copy; if you
-// change the user-facing text, update tests/specs to match EXACTLY.
-// Do NOT rewrite src/bot.ts — buildBot() already auto-loads this module.
-// Menu: wire this into /start via registerMainMenuItem({ label: "Get ZIP", data: "zip:generate" }) if the toolkit exposes it.
+registerMainMenuItem({ label: "📦 Get ZIP", data: "zip:generate", order: 20 });
 
-const composer = new Composer();
+const composer = new Composer<Ctx>();
 
 composer.callbackQuery("zip:generate", async (ctx) => {
   await ctx.answerCallbackQuery();
-  await ctx.reply("Generate ZIP archive of current project");
+
+  const files = ctx.session.generatedFiles;
+  if (!files || Object.keys(files).length === 0) {
+    await ctx.reply("No project to package yet. Tap 📝 Generate code to create one.", {
+      reply_markup: inlineKeyboard([[inlineButton("⬅️ Back to menu", "menu:main")]]),
+    });
+    return;
+  }
+
+  const placeholder = await ctx.reply("⏳ Packaging files…");
+
+  try {
+    const zipData = createZip(files);
+    const fileName = `${ctx.session.projectId || "project"}.zip`;
+
+    await ctx.api.deleteMessage(ctx.chat!.id, placeholder.message_id);
+    await ctx.replyWithDocument(
+      new InputFile(new Uint8Array(zipData), fileName),
+      { caption: `📦 ${Object.keys(files).length} file(s) packaged.` },
+    );
+  } catch {
+    await ctx.api.editMessageText(ctx.chat!.id, placeholder.message_id, "Couldn't create the ZIP archive. Try again.", {
+      reply_markup: inlineKeyboard([[inlineButton("⬅️ Back to menu", "menu:main")]]),
+    });
+  }
 });
 
 export default composer;

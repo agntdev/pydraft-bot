@@ -12,6 +12,7 @@ const composer = new Composer<Ctx>();
 const WELCOME = "👋 Welcome! Tap a button below to get started.";
 
 composer.command("start", async (ctx) => {
+  ctx.session.step = "idle";
   await ctx.reply(WELCOME, { reply_markup: mainMenuKeyboard() });
 });
 

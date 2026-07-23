@@ -9,8 +9,12 @@ import { inlineButton, inlineKeyboard } from "../toolkit/index.js";
 const composer = new Composer<Ctx>();
 
 const HELP =
-  "ℹ️ Tap /start to open the menu, then pick what you want from the buttons.\n\n" +
-  "Everything in this bot is reachable by tapping — you don't need to remember any commands.";
+  "ℹ️ How to use this bot:\n\n" +
+  "Tap 📝 Generate code to describe your Python project.\n" +
+  "The bot creates the files, then you can:\n" +
+  "• 📦 Get ZIP — download as a ZIP archive\n" +
+  "• ⬆️ Upload to GitHub — push to your repo\n\n" +
+  "Everything is button-driven — just tap what you need.";
 
 const backToMenu = inlineKeyboard([[inlineButton("⬅️ Back to menu", "menu:main")]]);
 
