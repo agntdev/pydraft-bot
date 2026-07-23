@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Get ZIP",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Generate ZIP archive of current project"
+            }
+          }
+        ],
+        "send": {
+          "callback": "zip:generate"
+        }
+      }
+    ]
+  }
+]
