@@ -1,9 +1,9 @@
 [
   {
-    "name": "Get ZIP shows error when no project",
+    "name": "Code generation button triggers prompt request",
     "steps": [
       {
-        "send": { "callback": "zip:generate" },
+        "send": { "callback": "code:generate" },
         "expect": [
           {
             "method": "answerCallbackQuery"
@@ -11,7 +11,7 @@
           {
             "method": "sendMessage",
             "payload": {
-              "text": "No project to package yet. Tap 📝 Generate code to create one."
+              "text": "Describe the Python project you need."
             }
           }
         ]
